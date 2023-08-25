@@ -134,6 +134,7 @@ for (let i = 0; i < 9; i++) {
  * @param {character[][]} board
  * @return {boolean}
  */
+/*
 var isValidSudoku = function (board) {
   for (let i = 0; i < 9; i++) {
     let row = new Set(),
@@ -163,6 +164,82 @@ var isValidSudoku = function (board) {
   return true
 
 };
+*/
+
+var isValidSudoku = function (board) {
+  const cols = new Map();
+  const rows = new Map();
+  const squares = new Map(); // key = `${r / 3}-${c / 3}`
+
+  for (let r = 0; r < 9; r++) {
+    for (let c = 0; c < 9; c++) {
+      if (board[r][c] === ".") {
+        continue;
+      }
+
+      if (
+        rows.has(r) && rows.get(r).has(board[r][c]) ||
+        cols.has(c) && cols.get(c).has(board[r][c]) ||
+        squares.has(`${Math.floor(r / 3)}-${Math.floor(c / 3)}`) &&
+        squares.get(`${Math.floor(r / 3)}-${Math.floor(c / 3)}`).has(board[r][c])
+      ) {
+        return false;
+      }
+
+      if (!cols.has(c)) {
+        cols.set(c, new Set());
+      }
+
+      console.log("The cols hashmap is ");
+      console.log(cols);
+
+      cols.get(c).add(board[r][c]);
+
+      console.log("The cols hashmap after adding column index, c is ");
+      console.log(cols);
+
+      if (!rows.has(r)) {
+        rows.set(r, new Set());
+      }
+
+      console.log("The rows hashmap is ");
+      console.log(rows);
+
+      rows.get(r).add(board[r][c]);
+
+      console.log("The rows hashmap after adding row index, r is ");
+      console.log(rows);
+
+      const squareKey = `${Math.floor(r / 3)}-${Math.floor(c / 3)}`;
+      if (!squares.has(squareKey)) {
+        squares.set(squareKey, new Set());
+      }
+
+      console.log("The squares hashmap is ");
+      console.log(squares);
+
+      squares.get(squareKey).add(board[r][c]);
+
+      console.log("The squares hashmap after adding the squares index, squareKey is ");
+      console.log(squares);
+
+    }
+  }
+
+  return true;
+};
+
+
+
+
+
+
+
+
+
+
+
+
 
 let board = [["5", "3", ".", ".", "7", ".", ".", ".", "."]
   , ["6", ".", ".", "1", "9", "5", ".", ".", "."]
@@ -187,3 +264,1570 @@ board = [["8", "3", ".", ".", "7", ".", ".", ".", "."]
   , [".", ".", ".", ".", "8", ".", ".", "7", "9"]];
 
 console.log(isValidSudoku(board)); // false
+
+/*
+
+class Solution {
+    isValidSudoku(board) {
+        const cols = new Map();
+        const rows = new Map();
+        const squares = new Map(); // key = `${r / 3}-${c / 3}`
+
+        for (let r = 0; r < 9; r++) {
+            for (let c = 0; c < 9; c++) {
+                if (board[r][c] === ".") {
+                    continue;
+                }
+
+                if (
+                    rows.has(r) && rows.get(r).has(board[r][c]) ||
+                    cols.has(c) && cols.get(c).has(board[r][c]) ||
+                    squares.has(`${Math.floor(r / 3)}-${Math.floor(c / 3)}`) &&
+                    squares.get(`${Math.floor(r / 3)}-${Math.floor(c / 3)}`).has(board[r][c])
+                ) {
+                    return false;
+                }
+
+                if (!cols.has(c)) {
+                    cols.set(c, new Set());
+                }
+                cols.get(c).add(board[r][c]);
+
+                if (!rows.has(r)) {
+                    rows.set(r, new Set());
+                }
+                rows.get(r).add(board[r][c]);
+
+                const squareKey = `${Math.floor(r / 3)}-${Math.floor(c / 3)}`;
+                if (!squares.has(squareKey)) {
+                    squares.set(squareKey, new Set());
+                }
+                squares.get(squareKey).add(board[r][c]);
+            }
+        }
+
+        return true;
+    }
+}
+
+
+*/
+
+/*
+Detailed Understandng 
+
+The cols hashmap is 
+Map(1) { 0 => Set(0) {} }
+The cols hashmap after adding column index, c is 
+Map(1) { 0 => Set(1) { '5' } }
+The rows hashmap is 
+Map(1) { 0 => Set(0) {} }
+The rows hashmap after adding row index, r is 
+Map(1) { 0 => Set(1) { '5' } }
+The squares hashmap is 
+Map(1) { '0-0' => Set(0) {} }
+The squares hashmap after adding the squares index, squareKey is 
+Map(1) { '0-0' => Set(1) { '5' } }
+The cols hashmap is 
+Map(2) { 0 => Set(1) { '5' }, 1 => Set(0) {} }
+The cols hashmap after adding column index, c is 
+Map(2) { 0 => Set(1) { '5' }, 1 => Set(1) { '3' } }
+The rows hashmap is 
+Map(1) { 0 => Set(1) { '5' } }
+The rows hashmap after adding row index, r is 
+Map(1) { 0 => Set(2) { '5', '3' } }
+The squares hashmap is 
+Map(1) { '0-0' => Set(1) { '5' } }
+The squares hashmap after adding the squares index, squareKey is 
+Map(1) { '0-0' => Set(2) { '5', '3' } }
+The cols hashmap is 
+Map(3) { 0 => Set(1) { '5' }, 1 => Set(1) { '3' }, 4 => Set(0) {} }
+The cols hashmap after adding column index, c is 
+Map(3) {
+  0 => Set(1) { '5' },
+  1 => Set(1) { '3' },
+  4 => Set(1) { '7' }
+}
+The rows hashmap is 
+Map(1) { 0 => Set(2) { '5', '3' } }
+The rows hashmap after adding row index, r is 
+Map(1) { 0 => Set(3) { '5', '3', '7' } }
+The squares hashmap is 
+Map(2) { '0-0' => Set(2) { '5', '3' }, '0-1' => Set(0) {} }
+The squares hashmap after adding the squares index, squareKey is 
+Map(2) { '0-0' => Set(2) { '5', '3' }, '0-1' => Set(1) { '7' } }
+The cols hashmap is 
+Map(3) {
+  0 => Set(1) { '5' },
+  1 => Set(1) { '3' },
+  4 => Set(1) { '7' }
+}
+The cols hashmap after adding column index, c is 
+Map(3) {
+  0 => Set(2) { '5', '6' },
+  1 => Set(1) { '3' },
+  4 => Set(1) { '7' }
+}
+The rows hashmap is 
+Map(2) { 0 => Set(3) { '5', '3', '7' }, 1 => Set(0) {} }
+The rows hashmap after adding row index, r is 
+Map(2) { 0 => Set(3) { '5', '3', '7' }, 1 => Set(1) { '6' } }
+The squares hashmap is 
+Map(2) { '0-0' => Set(2) { '5', '3' }, '0-1' => Set(1) { '7' } }
+The squares hashmap after adding the squares index, squareKey is 
+Map(2) { '0-0' => Set(3) { '5', '3', '6' }, '0-1' => Set(1) { '7' } }
+The cols hashmap is 
+Map(4) {
+  0 => Set(2) { '5', '6' },
+  1 => Set(1) { '3' },
+  4 => Set(1) { '7' },
+  3 => Set(0) {}
+}
+The cols hashmap after adding column index, c is 
+Map(4) {
+  0 => Set(2) { '5', '6' },
+  1 => Set(1) { '3' },
+  4 => Set(1) { '7' },
+  3 => Set(1) { '1' }
+}
+The rows hashmap is 
+Map(2) { 0 => Set(3) { '5', '3', '7' }, 1 => Set(1) { '6' } }
+The rows hashmap after adding row index, r is 
+Map(2) { 0 => Set(3) { '5', '3', '7' }, 1 => Set(2) { '6', '1' } }
+The squares hashmap is 
+Map(2) { '0-0' => Set(3) { '5', '3', '6' }, '0-1' => Set(1) { '7' } }
+The squares hashmap after adding the squares index, squareKey is 
+Map(2) {
+  '0-0' => Set(3) { '5', '3', '6' },
+  '0-1' => Set(2) { '7', '1' }
+}
+The cols hashmap is 
+Map(4) {
+  0 => Set(2) { '5', '6' },
+  1 => Set(1) { '3' },
+  4 => Set(1) { '7' },
+  3 => Set(1) { '1' }
+}
+The cols hashmap after adding column index, c is 
+Map(4) {
+  0 => Set(2) { '5', '6' },
+  1 => Set(1) { '3' },
+  4 => Set(2) { '7', '9' },
+  3 => Set(1) { '1' }
+}
+The rows hashmap is 
+Map(2) { 0 => Set(3) { '5', '3', '7' }, 1 => Set(2) { '6', '1' } }
+The rows hashmap after adding row index, r is 
+Map(2) { 0 => Set(3) { '5', '3', '7' }, 1 => Set(3) { '6', '1', '9' } }
+The squares hashmap is 
+Map(2) {
+  '0-0' => Set(3) { '5', '3', '6' },
+  '0-1' => Set(2) { '7', '1' }
+}
+The squares hashmap after adding the squares index, squareKey is 
+Map(2) {
+  '0-0' => Set(3) { '5', '3', '6' },
+  '0-1' => Set(3) { '7', '1', '9' }
+}
+The cols hashmap is 
+Map(5) {
+  0 => Set(2) { '5', '6' },
+  1 => Set(1) { '3' },
+  4 => Set(2) { '7', '9' },
+  3 => Set(1) { '1' },
+  5 => Set(0) {}
+}
+The cols hashmap after adding column index, c is 
+Map(5) {
+  0 => Set(2) { '5', '6' },
+  1 => Set(1) { '3' },
+  4 => Set(2) { '7', '9' },
+  3 => Set(1) { '1' },
+  5 => Set(1) { '5' }
+}
+The rows hashmap is 
+Map(2) { 0 => Set(3) { '5', '3', '7' }, 1 => Set(3) { '6', '1', '9' } }
+The rows hashmap after adding row index, r is 
+Map(2) {
+  0 => Set(3) { '5', '3', '7' },
+  1 => Set(4) { '6', '1', '9', '5' }
+}
+The squares hashmap is 
+Map(2) {
+  '0-0' => Set(3) { '5', '3', '6' },
+  '0-1' => Set(3) { '7', '1', '9' }
+}
+The squares hashmap after adding the squares index, squareKey is 
+Map(2) {
+  '0-0' => Set(3) { '5', '3', '6' },
+  '0-1' => Set(4) { '7', '1', '9', '5' }
+}
+The cols hashmap is 
+Map(5) {
+  0 => Set(2) { '5', '6' },
+  1 => Set(1) { '3' },
+  4 => Set(2) { '7', '9' },
+  3 => Set(1) { '1' },
+  5 => Set(1) { '5' }
+}
+The cols hashmap after adding column index, c is 
+Map(5) {
+  0 => Set(2) { '5', '6' },
+  1 => Set(2) { '3', '9' },
+  4 => Set(2) { '7', '9' },
+  3 => Set(1) { '1' },
+  5 => Set(1) { '5' }
+}
+The rows hashmap is 
+Map(3) {
+  0 => Set(3) { '5', '3', '7' },
+  1 => Set(4) { '6', '1', '9', '5' },
+  2 => Set(0) {}
+}
+The rows hashmap after adding row index, r is 
+Map(3) {
+  0 => Set(3) { '5', '3', '7' },
+  1 => Set(4) { '6', '1', '9', '5' },
+  2 => Set(1) { '9' }
+}
+The squares hashmap is 
+Map(2) {
+  '0-0' => Set(3) { '5', '3', '6' },
+  '0-1' => Set(4) { '7', '1', '9', '5' }
+}
+The squares hashmap after adding the squares index, squareKey is 
+Map(2) {
+  '0-0' => Set(4) { '5', '3', '6', '9' },
+  '0-1' => Set(4) { '7', '1', '9', '5' }
+}
+The cols hashmap is 
+Map(6) {
+  0 => Set(2) { '5', '6' },
+  1 => Set(2) { '3', '9' },
+  4 => Set(2) { '7', '9' },
+  3 => Set(1) { '1' },
+  5 => Set(1) { '5' },
+  2 => Set(0) {}
+}
+The cols hashmap after adding column index, c is 
+Map(6) {
+  0 => Set(2) { '5', '6' },
+  1 => Set(2) { '3', '9' },
+  4 => Set(2) { '7', '9' },
+  3 => Set(1) { '1' },
+  5 => Set(1) { '5' },
+  2 => Set(1) { '8' }
+}
+The rows hashmap is 
+Map(3) {
+  0 => Set(3) { '5', '3', '7' },
+  1 => Set(4) { '6', '1', '9', '5' },
+  2 => Set(1) { '9' }
+}
+The rows hashmap after adding row index, r is 
+Map(3) {
+  0 => Set(3) { '5', '3', '7' },
+  1 => Set(4) { '6', '1', '9', '5' },
+  2 => Set(2) { '9', '8' }
+}
+The squares hashmap is 
+Map(2) {
+  '0-0' => Set(4) { '5', '3', '6', '9' },
+  '0-1' => Set(4) { '7', '1', '9', '5' }
+}
+The squares hashmap after adding the squares index, squareKey is 
+Map(2) {
+  '0-0' => Set(5) { '5', '3', '6', '9', '8' },
+  '0-1' => Set(4) { '7', '1', '9', '5' }
+}
+The cols hashmap is 
+Map(7) {
+  0 => Set(2) { '5', '6' },
+  1 => Set(2) { '3', '9' },
+  4 => Set(2) { '7', '9' },
+  3 => Set(1) { '1' },
+  5 => Set(1) { '5' },
+  2 => Set(1) { '8' },
+  7 => Set(0) {}
+}
+The cols hashmap after adding column index, c is 
+Map(7) {
+  0 => Set(2) { '5', '6' },
+  1 => Set(2) { '3', '9' },
+  4 => Set(2) { '7', '9' },
+  3 => Set(1) { '1' },
+  5 => Set(1) { '5' },
+  2 => Set(1) { '8' },
+  7 => Set(1) { '6' }
+}
+The rows hashmap is 
+Map(3) {
+  0 => Set(3) { '5', '3', '7' },
+  1 => Set(4) { '6', '1', '9', '5' },
+  2 => Set(2) { '9', '8' }
+}
+The rows hashmap after adding row index, r is 
+Map(3) {
+  0 => Set(3) { '5', '3', '7' },
+  1 => Set(4) { '6', '1', '9', '5' },
+  2 => Set(3) { '9', '8', '6' }
+}
+The squares hashmap is 
+Map(3) {
+  '0-0' => Set(5) { '5', '3', '6', '9', '8' },
+  '0-1' => Set(4) { '7', '1', '9', '5' },
+  '0-2' => Set(0) {}
+}
+The squares hashmap after adding the squares index, squareKey is 
+Map(3) {
+  '0-0' => Set(5) { '5', '3', '6', '9', '8' },
+  '0-1' => Set(4) { '7', '1', '9', '5' },
+  '0-2' => Set(1) { '6' }
+}
+The cols hashmap is 
+Map(7) {
+  0 => Set(2) { '5', '6' },
+  1 => Set(2) { '3', '9' },
+  4 => Set(2) { '7', '9' },
+  3 => Set(1) { '1' },
+  5 => Set(1) { '5' },
+  2 => Set(1) { '8' },
+  7 => Set(1) { '6' }
+}
+The cols hashmap after adding column index, c is 
+Map(7) {
+  0 => Set(3) { '5', '6', '8' },
+  1 => Set(2) { '3', '9' },
+  4 => Set(2) { '7', '9' },
+  3 => Set(1) { '1' },
+  5 => Set(1) { '5' },
+  2 => Set(1) { '8' },
+  7 => Set(1) { '6' }
+}
+The rows hashmap is 
+Map(4) {
+  0 => Set(3) { '5', '3', '7' },
+  1 => Set(4) { '6', '1', '9', '5' },
+  2 => Set(3) { '9', '8', '6' },
+  3 => Set(0) {}
+}
+The rows hashmap after adding row index, r is 
+Map(4) {
+  0 => Set(3) { '5', '3', '7' },
+  1 => Set(4) { '6', '1', '9', '5' },
+  2 => Set(3) { '9', '8', '6' },
+  3 => Set(1) { '8' }
+}
+The squares hashmap is 
+Map(4) {
+  '0-0' => Set(5) { '5', '3', '6', '9', '8' },
+  '0-1' => Set(4) { '7', '1', '9', '5' },
+  '0-2' => Set(1) { '6' },
+  '1-0' => Set(0) {}
+}
+The squares hashmap after adding the squares index, squareKey is 
+Map(4) {
+  '0-0' => Set(5) { '5', '3', '6', '9', '8' },
+  '0-1' => Set(4) { '7', '1', '9', '5' },
+  '0-2' => Set(1) { '6' },
+  '1-0' => Set(1) { '8' }
+}
+The cols hashmap is 
+Map(7) {
+  0 => Set(3) { '5', '6', '8' },
+  1 => Set(2) { '3', '9' },
+  4 => Set(2) { '7', '9' },
+  3 => Set(1) { '1' },
+  5 => Set(1) { '5' },
+  2 => Set(1) { '8' },
+  7 => Set(1) { '6' }
+}
+The cols hashmap after adding column index, c is 
+Map(7) {
+  0 => Set(3) { '5', '6', '8' },
+  1 => Set(2) { '3', '9' },
+  4 => Set(3) { '7', '9', '6' },
+  3 => Set(1) { '1' },
+  5 => Set(1) { '5' },
+  2 => Set(1) { '8' },
+  7 => Set(1) { '6' }
+}
+The rows hashmap is 
+Map(4) {
+  0 => Set(3) { '5', '3', '7' },
+  1 => Set(4) { '6', '1', '9', '5' },
+  2 => Set(3) { '9', '8', '6' },
+  3 => Set(1) { '8' }
+}
+The rows hashmap after adding row index, r is 
+Map(4) {
+  0 => Set(3) { '5', '3', '7' },
+  1 => Set(4) { '6', '1', '9', '5' },
+  2 => Set(3) { '9', '8', '6' },
+  3 => Set(2) { '8', '6' }
+}
+The squares hashmap is 
+Map(5) {
+  '0-0' => Set(5) { '5', '3', '6', '9', '8' },
+  '0-1' => Set(4) { '7', '1', '9', '5' },
+  '0-2' => Set(1) { '6' },
+  '1-0' => Set(1) { '8' },
+  '1-1' => Set(0) {}
+}
+The squares hashmap after adding the squares index, squareKey is 
+Map(5) {
+  '0-0' => Set(5) { '5', '3', '6', '9', '8' },
+  '0-1' => Set(4) { '7', '1', '9', '5' },
+  '0-2' => Set(1) { '6' },
+  '1-0' => Set(1) { '8' },
+  '1-1' => Set(1) { '6' }
+}
+The cols hashmap is 
+Map(8) {
+  0 => Set(3) { '5', '6', '8' },
+  1 => Set(2) { '3', '9' },
+  4 => Set(3) { '7', '9', '6' },
+  3 => Set(1) { '1' },
+  5 => Set(1) { '5' },
+  2 => Set(1) { '8' },
+  7 => Set(1) { '6' },
+  8 => Set(0) {}
+}
+The cols hashmap after adding column index, c is 
+Map(8) {
+  0 => Set(3) { '5', '6', '8' },
+  1 => Set(2) { '3', '9' },
+  4 => Set(3) { '7', '9', '6' },
+  3 => Set(1) { '1' },
+  5 => Set(1) { '5' },
+  2 => Set(1) { '8' },
+  7 => Set(1) { '6' },
+  8 => Set(1) { '3' }
+}
+The rows hashmap is 
+Map(4) {
+  0 => Set(3) { '5', '3', '7' },
+  1 => Set(4) { '6', '1', '9', '5' },
+  2 => Set(3) { '9', '8', '6' },
+  3 => Set(2) { '8', '6' }
+}
+The rows hashmap after adding row index, r is 
+Map(4) {
+  0 => Set(3) { '5', '3', '7' },
+  1 => Set(4) { '6', '1', '9', '5' },
+  2 => Set(3) { '9', '8', '6' },
+  3 => Set(3) { '8', '6', '3' }
+}
+The squares hashmap is 
+Map(6) {
+  '0-0' => Set(5) { '5', '3', '6', '9', '8' },
+  '0-1' => Set(4) { '7', '1', '9', '5' },
+  '0-2' => Set(1) { '6' },
+  '1-0' => Set(1) { '8' },
+  '1-1' => Set(1) { '6' },
+  '1-2' => Set(0) {}
+}
+The squares hashmap after adding the squares index, squareKey is 
+Map(6) {
+  '0-0' => Set(5) { '5', '3', '6', '9', '8' },
+  '0-1' => Set(4) { '7', '1', '9', '5' },
+  '0-2' => Set(1) { '6' },
+  '1-0' => Set(1) { '8' },
+  '1-1' => Set(1) { '6' },
+  '1-2' => Set(1) { '3' }
+}
+The cols hashmap is 
+Map(8) {
+  0 => Set(3) { '5', '6', '8' },
+  1 => Set(2) { '3', '9' },
+  4 => Set(3) { '7', '9', '6' },
+  3 => Set(1) { '1' },
+  5 => Set(1) { '5' },
+  2 => Set(1) { '8' },
+  7 => Set(1) { '6' },
+  8 => Set(1) { '3' }
+}
+The cols hashmap after adding column index, c is 
+Map(8) {
+  0 => Set(4) { '5', '6', '8', '4' },
+  1 => Set(2) { '3', '9' },
+  4 => Set(3) { '7', '9', '6' },
+  3 => Set(1) { '1' },
+  5 => Set(1) { '5' },
+  2 => Set(1) { '8' },
+  7 => Set(1) { '6' },
+  8 => Set(1) { '3' }
+}
+The rows hashmap is 
+Map(5) {
+  0 => Set(3) { '5', '3', '7' },
+  1 => Set(4) { '6', '1', '9', '5' },
+  2 => Set(3) { '9', '8', '6' },
+  3 => Set(3) { '8', '6', '3' },
+  4 => Set(0) {}
+}
+The rows hashmap after adding row index, r is 
+Map(5) {
+  0 => Set(3) { '5', '3', '7' },
+  1 => Set(4) { '6', '1', '9', '5' },
+  2 => Set(3) { '9', '8', '6' },
+  3 => Set(3) { '8', '6', '3' },
+  4 => Set(1) { '4' }
+}
+The squares hashmap is 
+Map(6) {
+  '0-0' => Set(5) { '5', '3', '6', '9', '8' },
+  '0-1' => Set(4) { '7', '1', '9', '5' },
+  '0-2' => Set(1) { '6' },
+  '1-0' => Set(1) { '8' },
+  '1-1' => Set(1) { '6' },
+  '1-2' => Set(1) { '3' }
+}
+The squares hashmap after adding the squares index, squareKey is 
+Map(6) {
+  '0-0' => Set(5) { '5', '3', '6', '9', '8' },
+  '0-1' => Set(4) { '7', '1', '9', '5' },
+  '0-2' => Set(1) { '6' },
+  '1-0' => Set(2) { '8', '4' },
+  '1-1' => Set(1) { '6' },
+  '1-2' => Set(1) { '3' }
+}
+The cols hashmap is 
+Map(8) {
+  0 => Set(4) { '5', '6', '8', '4' },
+  1 => Set(2) { '3', '9' },
+  4 => Set(3) { '7', '9', '6' },
+  3 => Set(1) { '1' },
+  5 => Set(1) { '5' },
+  2 => Set(1) { '8' },
+  7 => Set(1) { '6' },
+  8 => Set(1) { '3' }
+}
+The cols hashmap after adding column index, c is 
+Map(8) {
+  0 => Set(4) { '5', '6', '8', '4' },
+  1 => Set(2) { '3', '9' },
+  4 => Set(3) { '7', '9', '6' },
+  3 => Set(2) { '1', '8' },
+  5 => Set(1) { '5' },
+  2 => Set(1) { '8' },
+  7 => Set(1) { '6' },
+  8 => Set(1) { '3' }
+}
+The rows hashmap is 
+Map(5) {
+  0 => Set(3) { '5', '3', '7' },
+  1 => Set(4) { '6', '1', '9', '5' },
+  2 => Set(3) { '9', '8', '6' },
+  3 => Set(3) { '8', '6', '3' },
+  4 => Set(1) { '4' }
+}
+The rows hashmap after adding row index, r is 
+Map(5) {
+  0 => Set(3) { '5', '3', '7' },
+  1 => Set(4) { '6', '1', '9', '5' },
+  2 => Set(3) { '9', '8', '6' },
+  3 => Set(3) { '8', '6', '3' },
+  4 => Set(2) { '4', '8' }
+}
+The squares hashmap is 
+Map(6) {
+  '0-0' => Set(5) { '5', '3', '6', '9', '8' },
+  '0-1' => Set(4) { '7', '1', '9', '5' },
+  '0-2' => Set(1) { '6' },
+  '1-0' => Set(2) { '8', '4' },
+  '1-1' => Set(1) { '6' },
+  '1-2' => Set(1) { '3' }
+}
+The squares hashmap after adding the squares index, squareKey is 
+Map(6) {
+  '0-0' => Set(5) { '5', '3', '6', '9', '8' },
+  '0-1' => Set(4) { '7', '1', '9', '5' },
+  '0-2' => Set(1) { '6' },
+  '1-0' => Set(2) { '8', '4' },
+  '1-1' => Set(2) { '6', '8' },
+  '1-2' => Set(1) { '3' }
+}
+The cols hashmap is 
+Map(8) {
+  0 => Set(4) { '5', '6', '8', '4' },
+  1 => Set(2) { '3', '9' },
+  4 => Set(3) { '7', '9', '6' },
+  3 => Set(2) { '1', '8' },
+  5 => Set(1) { '5' },
+  2 => Set(1) { '8' },
+  7 => Set(1) { '6' },
+  8 => Set(1) { '3' }
+}
+The cols hashmap after adding column index, c is 
+Map(8) {
+  0 => Set(4) { '5', '6', '8', '4' },
+  1 => Set(2) { '3', '9' },
+  4 => Set(3) { '7', '9', '6' },
+  3 => Set(2) { '1', '8' },
+  5 => Set(2) { '5', '3' },
+  2 => Set(1) { '8' },
+  7 => Set(1) { '6' },
+  8 => Set(1) { '3' }
+}
+The rows hashmap is 
+Map(5) {
+  0 => Set(3) { '5', '3', '7' },
+  1 => Set(4) { '6', '1', '9', '5' },
+  2 => Set(3) { '9', '8', '6' },
+  3 => Set(3) { '8', '6', '3' },
+  4 => Set(2) { '4', '8' }
+}
+The rows hashmap after adding row index, r is 
+Map(5) {
+  0 => Set(3) { '5', '3', '7' },
+  1 => Set(4) { '6', '1', '9', '5' },
+  2 => Set(3) { '9', '8', '6' },
+  3 => Set(3) { '8', '6', '3' },
+  4 => Set(3) { '4', '8', '3' }
+}
+The squares hashmap is 
+Map(6) {
+  '0-0' => Set(5) { '5', '3', '6', '9', '8' },
+  '0-1' => Set(4) { '7', '1', '9', '5' },
+  '0-2' => Set(1) { '6' },
+  '1-0' => Set(2) { '8', '4' },
+  '1-1' => Set(2) { '6', '8' },
+  '1-2' => Set(1) { '3' }
+}
+The squares hashmap after adding the squares index, squareKey is 
+Map(6) {
+  '0-0' => Set(5) { '5', '3', '6', '9', '8' },
+  '0-1' => Set(4) { '7', '1', '9', '5' },
+  '0-2' => Set(1) { '6' },
+  '1-0' => Set(2) { '8', '4' },
+  '1-1' => Set(3) { '6', '8', '3' },
+  '1-2' => Set(1) { '3' }
+}
+The cols hashmap is 
+Map(8) {
+  0 => Set(4) { '5', '6', '8', '4' },
+  1 => Set(2) { '3', '9' },
+  4 => Set(3) { '7', '9', '6' },
+  3 => Set(2) { '1', '8' },
+  5 => Set(2) { '5', '3' },
+  2 => Set(1) { '8' },
+  7 => Set(1) { '6' },
+  8 => Set(1) { '3' }
+}
+The cols hashmap after adding column index, c is 
+Map(8) {
+  0 => Set(4) { '5', '6', '8', '4' },
+  1 => Set(2) { '3', '9' },
+  4 => Set(3) { '7', '9', '6' },
+  3 => Set(2) { '1', '8' },
+  5 => Set(2) { '5', '3' },
+  2 => Set(1) { '8' },
+  7 => Set(1) { '6' },
+  8 => Set(2) { '3', '1' }
+}
+The rows hashmap is 
+Map(5) {
+  0 => Set(3) { '5', '3', '7' },
+  1 => Set(4) { '6', '1', '9', '5' },
+  2 => Set(3) { '9', '8', '6' },
+  3 => Set(3) { '8', '6', '3' },
+  4 => Set(3) { '4', '8', '3' }
+}
+The rows hashmap after adding row index, r is 
+Map(5) {
+  0 => Set(3) { '5', '3', '7' },
+  1 => Set(4) { '6', '1', '9', '5' },
+  2 => Set(3) { '9', '8', '6' },
+  3 => Set(3) { '8', '6', '3' },
+  4 => Set(4) { '4', '8', '3', '1' }
+}
+The squares hashmap is 
+Map(6) {
+  '0-0' => Set(5) { '5', '3', '6', '9', '8' },
+  '0-1' => Set(4) { '7', '1', '9', '5' },
+  '0-2' => Set(1) { '6' },
+  '1-0' => Set(2) { '8', '4' },
+  '1-1' => Set(3) { '6', '8', '3' },
+  '1-2' => Set(1) { '3' }
+}
+The squares hashmap after adding the squares index, squareKey is 
+Map(6) {
+  '0-0' => Set(5) { '5', '3', '6', '9', '8' },
+  '0-1' => Set(4) { '7', '1', '9', '5' },
+  '0-2' => Set(1) { '6' },
+  '1-0' => Set(2) { '8', '4' },
+  '1-1' => Set(3) { '6', '8', '3' },
+  '1-2' => Set(2) { '3', '1' }
+}
+The cols hashmap is 
+Map(8) {
+  0 => Set(4) { '5', '6', '8', '4' },
+  1 => Set(2) { '3', '9' },
+  4 => Set(3) { '7', '9', '6' },
+  3 => Set(2) { '1', '8' },
+  5 => Set(2) { '5', '3' },
+  2 => Set(1) { '8' },
+  7 => Set(1) { '6' },
+  8 => Set(2) { '3', '1' }
+}
+The cols hashmap after adding column index, c is 
+Map(8) {
+  0 => Set(5) { '5', '6', '8', '4', '7' },
+  1 => Set(2) { '3', '9' },
+  4 => Set(3) { '7', '9', '6' },
+  3 => Set(2) { '1', '8' },
+  5 => Set(2) { '5', '3' },
+  2 => Set(1) { '8' },
+  7 => Set(1) { '6' },
+  8 => Set(2) { '3', '1' }
+}
+The rows hashmap is 
+Map(6) {
+  0 => Set(3) { '5', '3', '7' },
+  1 => Set(4) { '6', '1', '9', '5' },
+  2 => Set(3) { '9', '8', '6' },
+  3 => Set(3) { '8', '6', '3' },
+  4 => Set(4) { '4', '8', '3', '1' },
+  5 => Set(0) {}
+}
+The rows hashmap after adding row index, r is 
+Map(6) {
+  0 => Set(3) { '5', '3', '7' },
+  1 => Set(4) { '6', '1', '9', '5' },
+  2 => Set(3) { '9', '8', '6' },
+  3 => Set(3) { '8', '6', '3' },
+  4 => Set(4) { '4', '8', '3', '1' },
+  5 => Set(1) { '7' }
+}
+The squares hashmap is 
+Map(6) {
+  '0-0' => Set(5) { '5', '3', '6', '9', '8' },
+  '0-1' => Set(4) { '7', '1', '9', '5' },
+  '0-2' => Set(1) { '6' },
+  '1-0' => Set(2) { '8', '4' },
+  '1-1' => Set(3) { '6', '8', '3' },
+  '1-2' => Set(2) { '3', '1' }
+}
+The squares hashmap after adding the squares index, squareKey is 
+Map(6) {
+  '0-0' => Set(5) { '5', '3', '6', '9', '8' },
+  '0-1' => Set(4) { '7', '1', '9', '5' },
+  '0-2' => Set(1) { '6' },
+  '1-0' => Set(3) { '8', '4', '7' },
+  '1-1' => Set(3) { '6', '8', '3' },
+  '1-2' => Set(2) { '3', '1' }
+}
+The cols hashmap is 
+Map(8) {
+  0 => Set(5) { '5', '6', '8', '4', '7' },
+  1 => Set(2) { '3', '9' },
+  4 => Set(3) { '7', '9', '6' },
+  3 => Set(2) { '1', '8' },
+  5 => Set(2) { '5', '3' },
+  2 => Set(1) { '8' },
+  7 => Set(1) { '6' },
+  8 => Set(2) { '3', '1' }
+}
+The cols hashmap after adding column index, c is 
+Map(8) {
+  0 => Set(5) { '5', '6', '8', '4', '7' },
+  1 => Set(2) { '3', '9' },
+  4 => Set(4) { '7', '9', '6', '2' },
+  3 => Set(2) { '1', '8' },
+  5 => Set(2) { '5', '3' },
+  2 => Set(1) { '8' },
+  7 => Set(1) { '6' },
+  8 => Set(2) { '3', '1' }
+}
+The rows hashmap is 
+Map(6) {
+  0 => Set(3) { '5', '3', '7' },
+  1 => Set(4) { '6', '1', '9', '5' },
+  2 => Set(3) { '9', '8', '6' },
+  3 => Set(3) { '8', '6', '3' },
+  4 => Set(4) { '4', '8', '3', '1' },
+  5 => Set(1) { '7' }
+}
+The rows hashmap after adding row index, r is 
+Map(6) {
+  0 => Set(3) { '5', '3', '7' },
+  1 => Set(4) { '6', '1', '9', '5' },
+  2 => Set(3) { '9', '8', '6' },
+  3 => Set(3) { '8', '6', '3' },
+  4 => Set(4) { '4', '8', '3', '1' },
+  5 => Set(2) { '7', '2' }
+}
+The squares hashmap is 
+Map(6) {
+  '0-0' => Set(5) { '5', '3', '6', '9', '8' },
+  '0-1' => Set(4) { '7', '1', '9', '5' },
+  '0-2' => Set(1) { '6' },
+  '1-0' => Set(3) { '8', '4', '7' },
+  '1-1' => Set(3) { '6', '8', '3' },
+  '1-2' => Set(2) { '3', '1' }
+}
+The squares hashmap after adding the squares index, squareKey is 
+Map(6) {
+  '0-0' => Set(5) { '5', '3', '6', '9', '8' },
+  '0-1' => Set(4) { '7', '1', '9', '5' },
+  '0-2' => Set(1) { '6' },
+  '1-0' => Set(3) { '8', '4', '7' },
+  '1-1' => Set(4) { '6', '8', '3', '2' },
+  '1-2' => Set(2) { '3', '1' }
+}
+The cols hashmap is 
+Map(8) {
+  0 => Set(5) { '5', '6', '8', '4', '7' },
+  1 => Set(2) { '3', '9' },
+  4 => Set(4) { '7', '9', '6', '2' },
+  3 => Set(2) { '1', '8' },
+  5 => Set(2) { '5', '3' },
+  2 => Set(1) { '8' },
+  7 => Set(1) { '6' },
+  8 => Set(2) { '3', '1' }
+}
+The cols hashmap after adding column index, c is 
+Map(8) {
+  0 => Set(5) { '5', '6', '8', '4', '7' },
+  1 => Set(2) { '3', '9' },
+  4 => Set(4) { '7', '9', '6', '2' },
+  3 => Set(2) { '1', '8' },
+  5 => Set(2) { '5', '3' },
+  2 => Set(1) { '8' },
+  7 => Set(1) { '6' },
+  8 => Set(3) { '3', '1', '6' }
+}
+The rows hashmap is 
+Map(6) {
+  0 => Set(3) { '5', '3', '7' },
+  1 => Set(4) { '6', '1', '9', '5' },
+  2 => Set(3) { '9', '8', '6' },
+  3 => Set(3) { '8', '6', '3' },
+  4 => Set(4) { '4', '8', '3', '1' },
+  5 => Set(2) { '7', '2' }
+}
+The rows hashmap after adding row index, r is 
+Map(6) {
+  0 => Set(3) { '5', '3', '7' },
+  1 => Set(4) { '6', '1', '9', '5' },
+  2 => Set(3) { '9', '8', '6' },
+  3 => Set(3) { '8', '6', '3' },
+  4 => Set(4) { '4', '8', '3', '1' },
+  5 => Set(3) { '7', '2', '6' }
+}
+The squares hashmap is 
+Map(6) {
+  '0-0' => Set(5) { '5', '3', '6', '9', '8' },
+  '0-1' => Set(4) { '7', '1', '9', '5' },
+  '0-2' => Set(1) { '6' },
+  '1-0' => Set(3) { '8', '4', '7' },
+  '1-1' => Set(4) { '6', '8', '3', '2' },
+  '1-2' => Set(2) { '3', '1' }
+}
+The squares hashmap after adding the squares index, squareKey is 
+Map(6) {
+  '0-0' => Set(5) { '5', '3', '6', '9', '8' },
+  '0-1' => Set(4) { '7', '1', '9', '5' },
+  '0-2' => Set(1) { '6' },
+  '1-0' => Set(3) { '8', '4', '7' },
+  '1-1' => Set(4) { '6', '8', '3', '2' },
+  '1-2' => Set(3) { '3', '1', '6' }
+}
+The cols hashmap is 
+Map(8) {
+  0 => Set(5) { '5', '6', '8', '4', '7' },
+  1 => Set(2) { '3', '9' },
+  4 => Set(4) { '7', '9', '6', '2' },
+  3 => Set(2) { '1', '8' },
+  5 => Set(2) { '5', '3' },
+  2 => Set(1) { '8' },
+  7 => Set(1) { '6' },
+  8 => Set(3) { '3', '1', '6' }
+}
+The cols hashmap after adding column index, c is 
+Map(8) {
+  0 => Set(5) { '5', '6', '8', '4', '7' },
+  1 => Set(3) { '3', '9', '6' },
+  4 => Set(4) { '7', '9', '6', '2' },
+  3 => Set(2) { '1', '8' },
+  5 => Set(2) { '5', '3' },
+  2 => Set(1) { '8' },
+  7 => Set(1) { '6' },
+  8 => Set(3) { '3', '1', '6' }
+}
+The rows hashmap is 
+Map(7) {
+  0 => Set(3) { '5', '3', '7' },
+  1 => Set(4) { '6', '1', '9', '5' },
+  2 => Set(3) { '9', '8', '6' },
+  3 => Set(3) { '8', '6', '3' },
+  4 => Set(4) { '4', '8', '3', '1' },
+  5 => Set(3) { '7', '2', '6' },
+  6 => Set(0) {}
+}
+The rows hashmap after adding row index, r is 
+Map(7) {
+  0 => Set(3) { '5', '3', '7' },
+  1 => Set(4) { '6', '1', '9', '5' },
+  2 => Set(3) { '9', '8', '6' },
+  3 => Set(3) { '8', '6', '3' },
+  4 => Set(4) { '4', '8', '3', '1' },
+  5 => Set(3) { '7', '2', '6' },
+  6 => Set(1) { '6' }
+}
+The squares hashmap is 
+Map(7) {
+  '0-0' => Set(5) { '5', '3', '6', '9', '8' },
+  '0-1' => Set(4) { '7', '1', '9', '5' },
+  '0-2' => Set(1) { '6' },
+  '1-0' => Set(3) { '8', '4', '7' },
+  '1-1' => Set(4) { '6', '8', '3', '2' },
+  '1-2' => Set(3) { '3', '1', '6' },
+  '2-0' => Set(0) {}
+}
+The squares hashmap after adding the squares index, squareKey is 
+Map(7) {
+  '0-0' => Set(5) { '5', '3', '6', '9', '8' },
+  '0-1' => Set(4) { '7', '1', '9', '5' },
+  '0-2' => Set(1) { '6' },
+  '1-0' => Set(3) { '8', '4', '7' },
+  '1-1' => Set(4) { '6', '8', '3', '2' },
+  '1-2' => Set(3) { '3', '1', '6' },
+  '2-0' => Set(1) { '6' }
+}
+The cols hashmap is 
+Map(9) {
+  0 => Set(5) { '5', '6', '8', '4', '7' },
+  1 => Set(3) { '3', '9', '6' },
+  4 => Set(4) { '7', '9', '6', '2' },
+  3 => Set(2) { '1', '8' },
+  5 => Set(2) { '5', '3' },
+  2 => Set(1) { '8' },
+  7 => Set(1) { '6' },
+  8 => Set(3) { '3', '1', '6' },
+  6 => Set(0) {}
+}
+The cols hashmap after adding column index, c is 
+Map(9) {
+  0 => Set(5) { '5', '6', '8', '4', '7' },
+  1 => Set(3) { '3', '9', '6' },
+  4 => Set(4) { '7', '9', '6', '2' },
+  3 => Set(2) { '1', '8' },
+  5 => Set(2) { '5', '3' },
+  2 => Set(1) { '8' },
+  7 => Set(1) { '6' },
+  8 => Set(3) { '3', '1', '6' },
+  6 => Set(1) { '2' }
+}
+The rows hashmap is 
+Map(7) {
+  0 => Set(3) { '5', '3', '7' },
+  1 => Set(4) { '6', '1', '9', '5' },
+  2 => Set(3) { '9', '8', '6' },
+  3 => Set(3) { '8', '6', '3' },
+  4 => Set(4) { '4', '8', '3', '1' },
+  5 => Set(3) { '7', '2', '6' },
+  6 => Set(1) { '6' }
+}
+The rows hashmap after adding row index, r is 
+Map(7) {
+  0 => Set(3) { '5', '3', '7' },
+  1 => Set(4) { '6', '1', '9', '5' },
+  2 => Set(3) { '9', '8', '6' },
+  3 => Set(3) { '8', '6', '3' },
+  4 => Set(4) { '4', '8', '3', '1' },
+  5 => Set(3) { '7', '2', '6' },
+  6 => Set(2) { '6', '2' }
+}
+The squares hashmap is 
+Map(8) {
+  '0-0' => Set(5) { '5', '3', '6', '9', '8' },
+  '0-1' => Set(4) { '7', '1', '9', '5' },
+  '0-2' => Set(1) { '6' },
+  '1-0' => Set(3) { '8', '4', '7' },
+  '1-1' => Set(4) { '6', '8', '3', '2' },
+  '1-2' => Set(3) { '3', '1', '6' },
+  '2-0' => Set(1) { '6' },
+  '2-2' => Set(0) {}
+}
+The squares hashmap after adding the squares index, squareKey is 
+Map(8) {
+  '0-0' => Set(5) { '5', '3', '6', '9', '8' },
+  '0-1' => Set(4) { '7', '1', '9', '5' },
+  '0-2' => Set(1) { '6' },
+  '1-0' => Set(3) { '8', '4', '7' },
+  '1-1' => Set(4) { '6', '8', '3', '2' },
+  '1-2' => Set(3) { '3', '1', '6' },
+  '2-0' => Set(1) { '6' },
+  '2-2' => Set(1) { '2' }
+}
+The cols hashmap is 
+Map(9) {
+  0 => Set(5) { '5', '6', '8', '4', '7' },
+  1 => Set(3) { '3', '9', '6' },
+  4 => Set(4) { '7', '9', '6', '2' },
+  3 => Set(2) { '1', '8' },
+  5 => Set(2) { '5', '3' },
+  2 => Set(1) { '8' },
+  7 => Set(1) { '6' },
+  8 => Set(3) { '3', '1', '6' },
+  6 => Set(1) { '2' }
+}
+The cols hashmap after adding column index, c is 
+Map(9) {
+  0 => Set(5) { '5', '6', '8', '4', '7' },
+  1 => Set(3) { '3', '9', '6' },
+  4 => Set(4) { '7', '9', '6', '2' },
+  3 => Set(2) { '1', '8' },
+  5 => Set(2) { '5', '3' },
+  2 => Set(1) { '8' },
+  7 => Set(2) { '6', '8' },
+  8 => Set(3) { '3', '1', '6' },
+  6 => Set(1) { '2' }
+}
+The rows hashmap is 
+Map(7) {
+  0 => Set(3) { '5', '3', '7' },
+  1 => Set(4) { '6', '1', '9', '5' },
+  2 => Set(3) { '9', '8', '6' },
+  3 => Set(3) { '8', '6', '3' },
+  4 => Set(4) { '4', '8', '3', '1' },
+  5 => Set(3) { '7', '2', '6' },
+  6 => Set(2) { '6', '2' }
+}
+The rows hashmap after adding row index, r is 
+Map(7) {
+  0 => Set(3) { '5', '3', '7' },
+  1 => Set(4) { '6', '1', '9', '5' },
+  2 => Set(3) { '9', '8', '6' },
+  3 => Set(3) { '8', '6', '3' },
+  4 => Set(4) { '4', '8', '3', '1' },
+  5 => Set(3) { '7', '2', '6' },
+  6 => Set(3) { '6', '2', '8' }
+}
+The squares hashmap is 
+Map(8) {
+  '0-0' => Set(5) { '5', '3', '6', '9', '8' },
+  '0-1' => Set(4) { '7', '1', '9', '5' },
+  '0-2' => Set(1) { '6' },
+  '1-0' => Set(3) { '8', '4', '7' },
+  '1-1' => Set(4) { '6', '8', '3', '2' },
+  '1-2' => Set(3) { '3', '1', '6' },
+  '2-0' => Set(1) { '6' },
+  '2-2' => Set(1) { '2' }
+}
+The squares hashmap after adding the squares index, squareKey is 
+Map(8) {
+  '0-0' => Set(5) { '5', '3', '6', '9', '8' },
+  '0-1' => Set(4) { '7', '1', '9', '5' },
+  '0-2' => Set(1) { '6' },
+  '1-0' => Set(3) { '8', '4', '7' },
+  '1-1' => Set(4) { '6', '8', '3', '2' },
+  '1-2' => Set(3) { '3', '1', '6' },
+  '2-0' => Set(1) { '6' },
+  '2-2' => Set(2) { '2', '8' }
+}
+The cols hashmap is 
+Map(9) {
+  0 => Set(5) { '5', '6', '8', '4', '7' },
+  1 => Set(3) { '3', '9', '6' },
+  4 => Set(4) { '7', '9', '6', '2' },
+  3 => Set(2) { '1', '8' },
+  5 => Set(2) { '5', '3' },
+  2 => Set(1) { '8' },
+  7 => Set(2) { '6', '8' },
+  8 => Set(3) { '3', '1', '6' },
+  6 => Set(1) { '2' }
+}
+The cols hashmap after adding column index, c is 
+Map(9) {
+  0 => Set(5) { '5', '6', '8', '4', '7' },
+  1 => Set(3) { '3', '9', '6' },
+  4 => Set(4) { '7', '9', '6', '2' },
+  3 => Set(3) { '1', '8', '4' },
+  5 => Set(2) { '5', '3' },
+  2 => Set(1) { '8' },
+  7 => Set(2) { '6', '8' },
+  8 => Set(3) { '3', '1', '6' },
+  6 => Set(1) { '2' }
+}
+The rows hashmap is 
+Map(8) {
+  0 => Set(3) { '5', '3', '7' },
+  1 => Set(4) { '6', '1', '9', '5' },
+  2 => Set(3) { '9', '8', '6' },
+  3 => Set(3) { '8', '6', '3' },
+  4 => Set(4) { '4', '8', '3', '1' },
+  5 => Set(3) { '7', '2', '6' },
+  6 => Set(3) { '6', '2', '8' },
+  7 => Set(0) {}
+}
+The rows hashmap after adding row index, r is 
+Map(8) {
+  0 => Set(3) { '5', '3', '7' },
+  1 => Set(4) { '6', '1', '9', '5' },
+  2 => Set(3) { '9', '8', '6' },
+  3 => Set(3) { '8', '6', '3' },
+  4 => Set(4) { '4', '8', '3', '1' },
+  5 => Set(3) { '7', '2', '6' },
+  6 => Set(3) { '6', '2', '8' },
+  7 => Set(1) { '4' }
+}
+The squares hashmap is 
+Map(9) {
+  '0-0' => Set(5) { '5', '3', '6', '9', '8' },
+  '0-1' => Set(4) { '7', '1', '9', '5' },
+  '0-2' => Set(1) { '6' },
+  '1-0' => Set(3) { '8', '4', '7' },
+  '1-1' => Set(4) { '6', '8', '3', '2' },
+  '1-2' => Set(3) { '3', '1', '6' },
+  '2-0' => Set(1) { '6' },
+  '2-2' => Set(2) { '2', '8' },
+  '2-1' => Set(0) {}
+}
+The squares hashmap after adding the squares index, squareKey is 
+Map(9) {
+  '0-0' => Set(5) { '5', '3', '6', '9', '8' },
+  '0-1' => Set(4) { '7', '1', '9', '5' },
+  '0-2' => Set(1) { '6' },
+  '1-0' => Set(3) { '8', '4', '7' },
+  '1-1' => Set(4) { '6', '8', '3', '2' },
+  '1-2' => Set(3) { '3', '1', '6' },
+  '2-0' => Set(1) { '6' },
+  '2-2' => Set(2) { '2', '8' },
+  '2-1' => Set(1) { '4' }
+}
+The cols hashmap is 
+Map(9) {
+  0 => Set(5) { '5', '6', '8', '4', '7' },
+  1 => Set(3) { '3', '9', '6' },
+  4 => Set(4) { '7', '9', '6', '2' },
+  3 => Set(3) { '1', '8', '4' },
+  5 => Set(2) { '5', '3' },
+  2 => Set(1) { '8' },
+  7 => Set(2) { '6', '8' },
+  8 => Set(3) { '3', '1', '6' },
+  6 => Set(1) { '2' }
+}
+The cols hashmap after adding column index, c is 
+Map(9) {
+  0 => Set(5) { '5', '6', '8', '4', '7' },
+  1 => Set(3) { '3', '9', '6' },
+  4 => Set(5) { '7', '9', '6', '2', '1' },
+  3 => Set(3) { '1', '8', '4' },
+  5 => Set(2) { '5', '3' },
+  2 => Set(1) { '8' },
+  7 => Set(2) { '6', '8' },
+  8 => Set(3) { '3', '1', '6' },
+  6 => Set(1) { '2' }
+}
+The rows hashmap is 
+Map(8) {
+  0 => Set(3) { '5', '3', '7' },
+  1 => Set(4) { '6', '1', '9', '5' },
+  2 => Set(3) { '9', '8', '6' },
+  3 => Set(3) { '8', '6', '3' },
+  4 => Set(4) { '4', '8', '3', '1' },
+  5 => Set(3) { '7', '2', '6' },
+  6 => Set(3) { '6', '2', '8' },
+  7 => Set(1) { '4' }
+}
+The rows hashmap after adding row index, r is 
+Map(8) {
+  0 => Set(3) { '5', '3', '7' },
+  1 => Set(4) { '6', '1', '9', '5' },
+  2 => Set(3) { '9', '8', '6' },
+  3 => Set(3) { '8', '6', '3' },
+  4 => Set(4) { '4', '8', '3', '1' },
+  5 => Set(3) { '7', '2', '6' },
+  6 => Set(3) { '6', '2', '8' },
+  7 => Set(2) { '4', '1' }
+}
+The squares hashmap is 
+Map(9) {
+  '0-0' => Set(5) { '5', '3', '6', '9', '8' },
+  '0-1' => Set(4) { '7', '1', '9', '5' },
+  '0-2' => Set(1) { '6' },
+  '1-0' => Set(3) { '8', '4', '7' },
+  '1-1' => Set(4) { '6', '8', '3', '2' },
+  '1-2' => Set(3) { '3', '1', '6' },
+  '2-0' => Set(1) { '6' },
+  '2-2' => Set(2) { '2', '8' },
+  '2-1' => Set(1) { '4' }
+}
+The squares hashmap after adding the squares index, squareKey is 
+Map(9) {
+  '0-0' => Set(5) { '5', '3', '6', '9', '8' },
+  '0-1' => Set(4) { '7', '1', '9', '5' },
+  '0-2' => Set(1) { '6' },
+  '1-0' => Set(3) { '8', '4', '7' },
+  '1-1' => Set(4) { '6', '8', '3', '2' },
+  '1-2' => Set(3) { '3', '1', '6' },
+  '2-0' => Set(1) { '6' },
+  '2-2' => Set(2) { '2', '8' },
+  '2-1' => Set(2) { '4', '1' }
+}
+The cols hashmap is 
+Map(9) {
+  0 => Set(5) { '5', '6', '8', '4', '7' },
+  1 => Set(3) { '3', '9', '6' },
+  4 => Set(5) { '7', '9', '6', '2', '1' },
+  3 => Set(3) { '1', '8', '4' },
+  5 => Set(2) { '5', '3' },
+  2 => Set(1) { '8' },
+  7 => Set(2) { '6', '8' },
+  8 => Set(3) { '3', '1', '6' },
+  6 => Set(1) { '2' }
+}
+The cols hashmap after adding column index, c is 
+Map(9) {
+  0 => Set(5) { '5', '6', '8', '4', '7' },
+  1 => Set(3) { '3', '9', '6' },
+  4 => Set(5) { '7', '9', '6', '2', '1' },
+  3 => Set(3) { '1', '8', '4' },
+  5 => Set(3) { '5', '3', '9' },
+  2 => Set(1) { '8' },
+  7 => Set(2) { '6', '8' },
+  8 => Set(3) { '3', '1', '6' },
+  6 => Set(1) { '2' }
+}
+The rows hashmap is 
+Map(8) {
+  0 => Set(3) { '5', '3', '7' },
+  1 => Set(4) { '6', '1', '9', '5' },
+  2 => Set(3) { '9', '8', '6' },
+  3 => Set(3) { '8', '6', '3' },
+  4 => Set(4) { '4', '8', '3', '1' },
+  5 => Set(3) { '7', '2', '6' },
+  6 => Set(3) { '6', '2', '8' },
+  7 => Set(2) { '4', '1' }
+}
+The rows hashmap after adding row index, r is 
+Map(8) {
+  0 => Set(3) { '5', '3', '7' },
+  1 => Set(4) { '6', '1', '9', '5' },
+  2 => Set(3) { '9', '8', '6' },
+  3 => Set(3) { '8', '6', '3' },
+  4 => Set(4) { '4', '8', '3', '1' },
+  5 => Set(3) { '7', '2', '6' },
+  6 => Set(3) { '6', '2', '8' },
+  7 => Set(3) { '4', '1', '9' }
+}
+The squares hashmap is 
+Map(9) {
+  '0-0' => Set(5) { '5', '3', '6', '9', '8' },
+  '0-1' => Set(4) { '7', '1', '9', '5' },
+  '0-2' => Set(1) { '6' },
+  '1-0' => Set(3) { '8', '4', '7' },
+  '1-1' => Set(4) { '6', '8', '3', '2' },
+  '1-2' => Set(3) { '3', '1', '6' },
+  '2-0' => Set(1) { '6' },
+  '2-2' => Set(2) { '2', '8' },
+  '2-1' => Set(2) { '4', '1' }
+}
+The squares hashmap after adding the squares index, squareKey is 
+Map(9) {
+  '0-0' => Set(5) { '5', '3', '6', '9', '8' },
+  '0-1' => Set(4) { '7', '1', '9', '5' },
+  '0-2' => Set(1) { '6' },
+  '1-0' => Set(3) { '8', '4', '7' },
+  '1-1' => Set(4) { '6', '8', '3', '2' },
+  '1-2' => Set(3) { '3', '1', '6' },
+  '2-0' => Set(1) { '6' },
+  '2-2' => Set(2) { '2', '8' },
+  '2-1' => Set(3) { '4', '1', '9' }
+}
+The cols hashmap is 
+Map(9) {
+  0 => Set(5) { '5', '6', '8', '4', '7' },
+  1 => Set(3) { '3', '9', '6' },
+  4 => Set(5) { '7', '9', '6', '2', '1' },
+  3 => Set(3) { '1', '8', '4' },
+  5 => Set(3) { '5', '3', '9' },
+  2 => Set(1) { '8' },
+  7 => Set(2) { '6', '8' },
+  8 => Set(3) { '3', '1', '6' },
+  6 => Set(1) { '2' }
+}
+The cols hashmap after adding column index, c is 
+Map(9) {
+  0 => Set(5) { '5', '6', '8', '4', '7' },
+  1 => Set(3) { '3', '9', '6' },
+  4 => Set(5) { '7', '9', '6', '2', '1' },
+  3 => Set(3) { '1', '8', '4' },
+  5 => Set(3) { '5', '3', '9' },
+  2 => Set(1) { '8' },
+  7 => Set(2) { '6', '8' },
+  8 => Set(4) { '3', '1', '6', '5' },
+  6 => Set(1) { '2' }
+}
+The rows hashmap is 
+Map(8) {
+  0 => Set(3) { '5', '3', '7' },
+  1 => Set(4) { '6', '1', '9', '5' },
+  2 => Set(3) { '9', '8', '6' },
+  3 => Set(3) { '8', '6', '3' },
+  4 => Set(4) { '4', '8', '3', '1' },
+  5 => Set(3) { '7', '2', '6' },
+  6 => Set(3) { '6', '2', '8' },
+  7 => Set(3) { '4', '1', '9' }
+}
+The rows hashmap after adding row index, r is 
+Map(8) {
+  0 => Set(3) { '5', '3', '7' },
+  1 => Set(4) { '6', '1', '9', '5' },
+  2 => Set(3) { '9', '8', '6' },
+  3 => Set(3) { '8', '6', '3' },
+  4 => Set(4) { '4', '8', '3', '1' },
+  5 => Set(3) { '7', '2', '6' },
+  6 => Set(3) { '6', '2', '8' },
+  7 => Set(4) { '4', '1', '9', '5' }
+}
+The squares hashmap is 
+Map(9) {
+  '0-0' => Set(5) { '5', '3', '6', '9', '8' },
+  '0-1' => Set(4) { '7', '1', '9', '5' },
+  '0-2' => Set(1) { '6' },
+  '1-0' => Set(3) { '8', '4', '7' },
+  '1-1' => Set(4) { '6', '8', '3', '2' },
+  '1-2' => Set(3) { '3', '1', '6' },
+  '2-0' => Set(1) { '6' },
+  '2-2' => Set(2) { '2', '8' },
+  '2-1' => Set(3) { '4', '1', '9' }
+}
+The squares hashmap after adding the squares index, squareKey is 
+Map(9) {
+  '0-0' => Set(5) { '5', '3', '6', '9', '8' },
+  '0-1' => Set(4) { '7', '1', '9', '5' },
+  '0-2' => Set(1) { '6' },
+  '1-0' => Set(3) { '8', '4', '7' },
+  '1-1' => Set(4) { '6', '8', '3', '2' },
+  '1-2' => Set(3) { '3', '1', '6' },
+  '2-0' => Set(1) { '6' },
+  '2-2' => Set(3) { '2', '8', '5' },
+  '2-1' => Set(3) { '4', '1', '9' }
+}
+The cols hashmap is 
+Map(9) {
+  0 => Set(5) { '5', '6', '8', '4', '7' },
+  1 => Set(3) { '3', '9', '6' },
+  4 => Set(5) { '7', '9', '6', '2', '1' },
+  3 => Set(3) { '1', '8', '4' },
+  5 => Set(3) { '5', '3', '9' },
+  2 => Set(1) { '8' },
+  7 => Set(2) { '6', '8' },
+  8 => Set(4) { '3', '1', '6', '5' },
+  6 => Set(1) { '2' }
+}
+The cols hashmap after adding column index, c is 
+Map(9) {
+  0 => Set(5) { '5', '6', '8', '4', '7' },
+  1 => Set(3) { '3', '9', '6' },
+  4 => Set(6) { '7', '9', '6', '2', '1', '8' },
+  3 => Set(3) { '1', '8', '4' },
+  5 => Set(3) { '5', '3', '9' },
+  2 => Set(1) { '8' },
+  7 => Set(2) { '6', '8' },
+  8 => Set(4) { '3', '1', '6', '5' },
+  6 => Set(1) { '2' }
+}
+The rows hashmap is 
+Map(9) {
+  0 => Set(3) { '5', '3', '7' },
+  1 => Set(4) { '6', '1', '9', '5' },
+  2 => Set(3) { '9', '8', '6' },
+  3 => Set(3) { '8', '6', '3' },
+  4 => Set(4) { '4', '8', '3', '1' },
+  5 => Set(3) { '7', '2', '6' },
+  6 => Set(3) { '6', '2', '8' },
+  7 => Set(4) { '4', '1', '9', '5' },
+  8 => Set(0) {}
+}
+The rows hashmap after adding row index, r is 
+Map(9) {
+  0 => Set(3) { '5', '3', '7' },
+  1 => Set(4) { '6', '1', '9', '5' },
+  2 => Set(3) { '9', '8', '6' },
+  3 => Set(3) { '8', '6', '3' },
+  4 => Set(4) { '4', '8', '3', '1' },
+  5 => Set(3) { '7', '2', '6' },
+  6 => Set(3) { '6', '2', '8' },
+  7 => Set(4) { '4', '1', '9', '5' },
+  8 => Set(1) { '8' }
+}
+The squares hashmap is 
+Map(9) {
+  '0-0' => Set(5) { '5', '3', '6', '9', '8' },
+  '0-1' => Set(4) { '7', '1', '9', '5' },
+  '0-2' => Set(1) { '6' },
+  '1-0' => Set(3) { '8', '4', '7' },
+  '1-1' => Set(4) { '6', '8', '3', '2' },
+  '1-2' => Set(3) { '3', '1', '6' },
+  '2-0' => Set(1) { '6' },
+  '2-2' => Set(3) { '2', '8', '5' },
+  '2-1' => Set(3) { '4', '1', '9' }
+}
+The squares hashmap after adding the squares index, squareKey is 
+Map(9) {
+  '0-0' => Set(5) { '5', '3', '6', '9', '8' },
+  '0-1' => Set(4) { '7', '1', '9', '5' },
+  '0-2' => Set(1) { '6' },
+  '1-0' => Set(3) { '8', '4', '7' },
+  '1-1' => Set(4) { '6', '8', '3', '2' },
+  '1-2' => Set(3) { '3', '1', '6' },
+  '2-0' => Set(1) { '6' },
+  '2-2' => Set(3) { '2', '8', '5' },
+  '2-1' => Set(4) { '4', '1', '9', '8' }
+}
+The cols hashmap is 
+Map(9) {
+  0 => Set(5) { '5', '6', '8', '4', '7' },
+  1 => Set(3) { '3', '9', '6' },
+  4 => Set(6) { '7', '9', '6', '2', '1', '8' },
+  3 => Set(3) { '1', '8', '4' },
+  5 => Set(3) { '5', '3', '9' },
+  2 => Set(1) { '8' },
+  7 => Set(2) { '6', '8' },
+  8 => Set(4) { '3', '1', '6', '5' },
+  6 => Set(1) { '2' }
+}
+The cols hashmap after adding column index, c is 
+Map(9) {
+  0 => Set(5) { '5', '6', '8', '4', '7' },
+  1 => Set(3) { '3', '9', '6' },
+  4 => Set(6) { '7', '9', '6', '2', '1', '8' },
+  3 => Set(3) { '1', '8', '4' },
+  5 => Set(3) { '5', '3', '9' },
+  2 => Set(1) { '8' },
+  7 => Set(3) { '6', '8', '7' },
+  8 => Set(4) { '3', '1', '6', '5' },
+  6 => Set(1) { '2' }
+}
+The rows hashmap is 
+Map(9) {
+  0 => Set(3) { '5', '3', '7' },
+  1 => Set(4) { '6', '1', '9', '5' },
+  2 => Set(3) { '9', '8', '6' },
+  3 => Set(3) { '8', '6', '3' },
+  4 => Set(4) { '4', '8', '3', '1' },
+  5 => Set(3) { '7', '2', '6' },
+  6 => Set(3) { '6', '2', '8' },
+  7 => Set(4) { '4', '1', '9', '5' },
+  8 => Set(1) { '8' }
+}
+The rows hashmap after adding row index, r is 
+Map(9) {
+  0 => Set(3) { '5', '3', '7' },
+  1 => Set(4) { '6', '1', '9', '5' },
+  2 => Set(3) { '9', '8', '6' },
+  3 => Set(3) { '8', '6', '3' },
+  4 => Set(4) { '4', '8', '3', '1' },
+  5 => Set(3) { '7', '2', '6' },
+  6 => Set(3) { '6', '2', '8' },
+  7 => Set(4) { '4', '1', '9', '5' },
+  8 => Set(2) { '8', '7' }
+}
+The squares hashmap is 
+Map(9) {
+  '0-0' => Set(5) { '5', '3', '6', '9', '8' },
+  '0-1' => Set(4) { '7', '1', '9', '5' },
+  '0-2' => Set(1) { '6' },
+  '1-0' => Set(3) { '8', '4', '7' },
+  '1-1' => Set(4) { '6', '8', '3', '2' },
+  '1-2' => Set(3) { '3', '1', '6' },
+  '2-0' => Set(1) { '6' },
+  '2-2' => Set(3) { '2', '8', '5' },
+  '2-1' => Set(4) { '4', '1', '9', '8' }
+}
+The squares hashmap after adding the squares index, squareKey is 
+Map(9) {
+  '0-0' => Set(5) { '5', '3', '6', '9', '8' },
+  '0-1' => Set(4) { '7', '1', '9', '5' },
+  '0-2' => Set(1) { '6' },
+  '1-0' => Set(3) { '8', '4', '7' },
+  '1-1' => Set(4) { '6', '8', '3', '2' },
+  '1-2' => Set(3) { '3', '1', '6' },
+  '2-0' => Set(1) { '6' },
+  '2-2' => Set(4) { '2', '8', '5', '7' },
+  '2-1' => Set(4) { '4', '1', '9', '8' }
+}
+The cols hashmap is 
+Map(9) {
+  0 => Set(5) { '5', '6', '8', '4', '7' },
+  1 => Set(3) { '3', '9', '6' },
+  4 => Set(6) { '7', '9', '6', '2', '1', '8' },
+  3 => Set(3) { '1', '8', '4' },
+  5 => Set(3) { '5', '3', '9' },
+  2 => Set(1) { '8' },
+  7 => Set(3) { '6', '8', '7' },
+  8 => Set(4) { '3', '1', '6', '5' },
+  6 => Set(1) { '2' }
+}
+The cols hashmap after adding column index, c is 
+Map(9) {
+  0 => Set(5) { '5', '6', '8', '4', '7' },
+  1 => Set(3) { '3', '9', '6' },
+  4 => Set(6) { '7', '9', '6', '2', '1', '8' },
+  3 => Set(3) { '1', '8', '4' },
+  5 => Set(3) { '5', '3', '9' },
+  2 => Set(1) { '8' },
+  7 => Set(3) { '6', '8', '7' },
+  8 => Set(5) { '3', '1', '6', '5', '9' },
+  6 => Set(1) { '2' }
+}
+The rows hashmap is 
+Map(9) {
+  0 => Set(3) { '5', '3', '7' },
+  1 => Set(4) { '6', '1', '9', '5' },
+  2 => Set(3) { '9', '8', '6' },
+  3 => Set(3) { '8', '6', '3' },
+  4 => Set(4) { '4', '8', '3', '1' },
+  5 => Set(3) { '7', '2', '6' },
+  6 => Set(3) { '6', '2', '8' },
+  7 => Set(4) { '4', '1', '9', '5' },
+  8 => Set(2) { '8', '7' }
+}
+The rows hashmap after adding row index, r is 
+Map(9) {
+  0 => Set(3) { '5', '3', '7' },
+  1 => Set(4) { '6', '1', '9', '5' },
+  2 => Set(3) { '9', '8', '6' },
+  3 => Set(3) { '8', '6', '3' },
+  4 => Set(4) { '4', '8', '3', '1' },
+  5 => Set(3) { '7', '2', '6' },
+  6 => Set(3) { '6', '2', '8' },
+  7 => Set(4) { '4', '1', '9', '5' },
+  8 => Set(3) { '8', '7', '9' }
+}
+The squares hashmap is 
+Map(9) {
+  '0-0' => Set(5) { '5', '3', '6', '9', '8' },
+  '0-1' => Set(4) { '7', '1', '9', '5' },
+  '0-2' => Set(1) { '6' },
+  '1-0' => Set(3) { '8', '4', '7' },
+  '1-1' => Set(4) { '6', '8', '3', '2' },
+  '1-2' => Set(3) { '3', '1', '6' },
+  '2-0' => Set(1) { '6' },
+  '2-2' => Set(4) { '2', '8', '5', '7' },
+  '2-1' => Set(4) { '4', '1', '9', '8' }
+}
+The squares hashmap after adding the squares index, squareKey is 
+Map(9) {
+  '0-0' => Set(5) { '5', '3', '6', '9', '8' },
+  '0-1' => Set(4) { '7', '1', '9', '5' },
+  '0-2' => Set(1) { '6' },
+  '1-0' => Set(3) { '8', '4', '7' },
+  '1-1' => Set(4) { '6', '8', '3', '2' },
+  '1-2' => Set(3) { '3', '1', '6' },
+  '2-0' => Set(1) { '6' },
+  '2-2' => Set(5) { '2', '8', '5', '7', '9' },
+  '2-1' => Set(4) { '4', '1', '9', '8' }
+}
+
+
+
+
+
+
+*/
