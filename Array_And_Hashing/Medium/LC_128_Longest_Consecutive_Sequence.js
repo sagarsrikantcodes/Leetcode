@@ -32,8 +32,8 @@ input - Array of integers
 output - Integer data type. 
 
 Algorithm - 
-// Edge case
-1. If the length of the nums array is zero, return zero to the calling function. 
+
+1. Edge Case, If the length of the nums array is zero, return zero to the calling function. 
 2. Declare and create a hashset, set and initialize it to an empty set.
 3. Declare and create a variable, answer and initialize it to 1. 
 4. Loop through the nums array and add the distinct elements to the hashset, set. 
