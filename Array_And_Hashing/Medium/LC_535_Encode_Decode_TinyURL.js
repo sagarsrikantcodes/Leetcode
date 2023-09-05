@@ -41,7 +41,7 @@ Let's proceed with implementing the code:
 
 // problem link https://leetcode.com/problems/encode-and-decode-tinyurl
 // time complexity O(1)
-
+/*
 const encodeMap = new Map();
 const decodeMap = new Map();
 const base = 'http://tinyurl.com/';
@@ -62,6 +62,27 @@ var encode = function (longUrl) {
 var decode = function (shortUrl) {
   return decodeMap.get(shortUrl);
 };
+*/
+
+const encodeMap = {};
+const decodeMap = {};
+const base = 'http://tinyurl.com/';
+
+
+var encode = function (longUrl) {
+  let shortUrl = '';
+  if (!(longUrl in encodeMap)) {
+    shortUrl = base + Object.keys(encodeMap).length + 1;
+    encodeMap[longUrl] = shortUrl;
+    decodeMap[shortUrl] = longUrl;
+  }
+
+  return shortUrl || encodeMap[longUrl];
+};
+
+var decode = function (shortUrl) {
+  return decodeMap[shortUrl];
+}
 
 console.log(decode(encode("https://leetcode.com/problems/design-tinyurl")));
 
