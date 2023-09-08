@@ -65,6 +65,8 @@ Complexity Analysis:
  * @param {number[]} nums
  * @return {number}
  */
+
+/*
 var distinctAverages = function (nums) {
   if (nums.length === 2) {
     return 1;
@@ -81,6 +83,38 @@ var distinctAverages = function (nums) {
     set.add(average);
   }
   // console.log(set);
+
+  return set.size;
+};
+*/
+/*
+class Solution {
+  public int distinctAverages(int[] nums) {
+      Set<Integer> set = new HashSet<>();
+      Arrays.sort(nums);
+      int i = 0, j = nums.length-1;
+      
+      while (i < j) {
+          int ave = nums[i++]+nums[j--];
+          set.add(ave);
+      }
+      
+      return set.size();
+  }
+}
+*/
+
+var distinctAverages = function (nums) {
+  const set = new Set();
+  nums.sort((a, b) => a - b);
+  let i = 0, j = nums.length - 1;
+
+  while (i < j) {
+    let average = (nums[i] + nums[j]) / 2;
+    set.add(average);
+    i += 1;
+    j -= 1;
+  }
 
   return set.size;
 };
