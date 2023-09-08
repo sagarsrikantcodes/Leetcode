@@ -104,6 +104,14 @@ class Solution {
 }
 */
 
+// Two Pointers Method
+/*
+Complexity Analysis:
+1. Time Complexity = O(nlogn) + O(n) => O(nlogn)
+2. Space Complexity = O(n), Due to hashset.
+
+*/
+
 var distinctAverages = function (nums) {
   const set = new Set();
   nums.sort((a, b) => a - b);
